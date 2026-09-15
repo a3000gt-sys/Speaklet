@@ -1,0 +1,2 @@
+# Speaklet
+Live Translator PWA
