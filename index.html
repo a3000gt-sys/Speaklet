@@ -465,7 +465,11 @@
   function loadVoices(){
     if (!synth) return;
     var all = synth.getVoices();
-    if (!all.length) return;
+    if (!all.length) {
+      // Voices not loaded yet, retry in 100ms
+      setTimeout(loadVoices, 100);
+      return;
+    }
     var prefix = (targetLangSelect.value || 'en-US').split('-')[0].toLowerCase();
     var filtered = all.filter(function(v){ return v.lang && v.lang.toLowerCase().indexOf(prefix) === 0; });
     if (!filtered.length) filtered = all;
@@ -487,7 +491,7 @@
 
   if (synth){
     // Load voices immediately and on change
-    setTimeout(loadVoices, 100);
+    loadVoices();
     synth.onvoiceschanged = loadVoices;
   } else {
     speakToggle.disabled = true;
