@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#48d597">
-<link rel="manifest" href="/manifest.json">
 <title>Live Translator</title>
 <style>
   :root{
@@ -144,21 +143,6 @@
   .turn-side .turn-dot{width:8px; height:8px; border-radius:50%; background:currentColor; opacity:0;}
   .turn-side.active.turn-listening .turn-dot{opacity:1; animation:pulse 1.1s infinite;}
 
-  .lang-btn-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:12px; margin:16px 0;}
-  .lang-btn{
-    background:var(--panel2); border:1px solid var(--border); color:var(--text); padding:12px;
-    border-radius:10px; cursor:pointer; transition:all 0.2s; font-size:0.9rem; position:relative;
-  }
-  .lang-btn:hover:not(:disabled){border-color:var(--accent);}
-  .lang-btn:disabled{opacity:0.6; cursor:default;}
-  .lang-btn-label{font-weight:600; display:block; margin-bottom:4px;}
-  .lang-btn-info{font-size:0.75rem; color:var(--muted);}
-  .lang-btn-progress{
-    position:absolute; top:0; left:0; height:100%; border-radius:10px; background:rgba(108,140,255,0.2);
-    transition:width 0.3s; width:0%;
-  }
-  .lang-btn .content{position:relative; z-index:1;}
-
   ::-webkit-scrollbar{width:8px;}
   ::-webkit-scrollbar-thumb{background:var(--border); border-radius:8px;}
 </style>
@@ -195,7 +179,7 @@
     </div>
     <div class="left" style="flex:0 0 auto;">
       <label class="speak-toggle">
-        <input type="checkbox" id="speakToggle">
+        <input type="checkbox" id="speakToggle" checked>
         <span style="font-size:2.6rem; line-height:1;">🔊</span> Speak translations
       </label>
       <select id="voiceSelect" class="voice-select" aria-label="Voice"></select>
@@ -312,7 +296,6 @@
           <li><b>Click the red "Stop Listening" button</b> — Stops listening and finishes translating what you said</li>
           <li><b>See the translation</b> — Your original words appear on the left with a speaker button (🔊), translation appears on the right with its own speaker button</li>
           <li><b>Click speaker buttons to replay</b> — Click 🔊 next to any text to hear it read aloud in the selected voice</li>
-          <li><b>Optional: Enable "Speak translations"</b> — Check the box with the big 🔊 icon to automatically hear translations read aloud in your chosen voice as they appear</li>
         </ol>
 
         <h3 style="color: var(--accent2); margin-top: 28px;">🔁 Conversation Mode</h3>
@@ -321,30 +304,10 @@
           <li><b>Pick languages</b> — Person A picks their language (left dropdown), Person B picks theirs (right dropdown)</li>
           <li><b>Enable "Read translations aloud"</b> — Check the box with the big 🔊 icon so each person can hear translations automatically</li>
           <li><b>Pick a voice</b> — Choose which voice reads the translations (Google voices are recommended for better quality)</li>
-          <li><b>Tap whose turn it is</b> — Click the large toggle button for whoever is about to speak (shows their language name like "🎙️ Spanish (Spain)")</li>
-          <li><b>The button will pulse</b> — The active button pulses to show it's listening for that person's speech</li>
-          <li><b>Speak one sentence</b> — Say your sentence clearly. The app automatically stops when you pause for 2 seconds</li>
-          <li><b>It translates & reads aloud</b> — What you said appears on your side in your language, and the translation appears on the other side in their language and is read aloud</li>
-          <li><b>Tap again for the next turn</b> — Click the other person's button when it's their turn to speak. Keep switching back and forth</li>
+          <li><b>Tap whose turn it is</b> — Click the large toggle button for whoever is about to speak</li>
+          <li><b>Speak one sentence</b> — Say your sentence clearly. The app automatically stops when you pause</li>
+          <li><b>It translates & reads aloud</b> — What you said appears on your side, translation on the other side</li>
         </ol>
-
-        <h3 style="color: var(--accent2); margin-top: 28px;">💡 Tips for Best Results</h3>
-        <ul style="margin: 10px 0; padding-left: 20px;">
-          <li><b>Button colors matter</b> — Green "Start Listening" starts listening, red "Stop Listening" stops it</li>
-          <li><b>Use speaker buttons (🔊)</b> — Click the speaker button next to any text to hear it read aloud in your chosen voice</li>
-          <li><b>Use Chrome or Edge</b> — Works best on these browsers (Safari has limited speech recognition)</li>
-          <li><b>Speak clearly & pause between sentences</b> — The app recognizes you better when you pause for a moment</li>
-          <li><b>Use a quiet room</b> — Background noise makes speech recognition harder</li>
-          <li><b>Stay close to the mic</b> — Better distance = better accuracy</li>
-          <li><b>Google voices are better</b> — The voice selector shows all available voices; Google ones tend to sound more natural and are recommended</li>
-          <li><b>Allow microphone access</b> — Your browser will ask for permission the first time you click the Start Listening button. Click Allow to continue</li>
-        </ul>
-
-        <h3 style="color: var(--accent2); margin-top: 28px;">❓ Frequently Asked Questions</h3>
-        <p style="margin: 10px 0;"><b>Q: Does it work offline?</b><br>A: Speech recognition and translation both require an internet connection.</p>
-        <p style="margin: 10px 0;"><b>Q: Is my audio recorded?</b><br>A: Your speech is sent to Google's servers for speech recognition. Translation text goes to the translation service.</p>
-        <p style="margin: 10px 0;"><b>Q: Can I use it on my phone?</b><br>A: Yes! It works on Android in Chrome. On iPhone, speech recognition is limited in browsers, so desktop/laptop works best.</p>
-        <p style="margin: 10px 0;"><b>Q: Why isn't my language listed?</b><br>A: We support 50+ languages! If yours isn't showing, it might not have speech recognition available in your browser.</p>
       </div>
     </div>
   </div>
@@ -352,7 +315,6 @@
 
 <script>
 (function(){
-  // Web Speech API language code -> [display name, translation code, vosk_model_code]
   var LANGS = [
     ["en-US","English (US)","en","en"],
     ["es-ES","Spanish (Spain)","es","es"],
@@ -417,9 +379,7 @@
       sel.appendChild(o);
     });
     sel.value = defaultValue;
-    if (sel.value !== defaultValue){
-      sel.selectedIndex = 0;
-    }
+    if (sel.value !== defaultValue) sel.selectedIndex = 0;
   }
 
   var langSelect = document.getElementById('langSelect');
@@ -450,7 +410,6 @@
   }
   updateTranslationLabel();
 
-  // ---- Text-to-speech ----
   var synth = window.speechSynthesis;
   var languageVoices = [];
   var userPickedVoice = false;
@@ -466,7 +425,6 @@
     if (!synth) return;
     var all = synth.getVoices();
     if (!all.length) {
-      // Voices not loaded yet, retry in 100ms
       setTimeout(loadVoices, 100);
       return;
     }
@@ -490,7 +448,6 @@
   }
 
   if (synth){
-    // Load voices immediately and on change
     loadVoices();
     synth.onvoiceschanged = loadVoices;
   } else {
@@ -522,10 +479,7 @@
     speakTextForce(text);
   }
 
-  stopSpeakBtn.addEventListener('click', function(){
-    stopListening();
-  });
-
+  stopSpeakBtn.addEventListener('click', function(){ stopListening(); });
   speakToggle.addEventListener('change', function(){
     if (!speakToggle.checked && synth) synth.cancel();
   });
@@ -536,8 +490,6 @@
   var shouldRestart = false;
   var interimEl = null;
   var translationCache = Object.create(null);
-  var originalFullText = [];
-  var englishFullText = [];
 
   function setStatus(msg, isError){
     statusEl.textContent = msg;
@@ -674,15 +626,13 @@
 
     rec.onerror = function(event){
       if (silenceTimeout) clearTimeout(silenceTimeout);
-      if (event.error === 'aborted'){
-        return;
-      }
+      if (event.error === 'aborted') return;
       if (event.error === 'no-speech'){
         setStatus('No speech detected. Try speaking louder or closer to the mic.', true);
         return;
       }
       if (event.error === 'not-allowed' || event.error === 'service-not-allowed'){
-        setStatus('Microphone access was blocked. Allow microphone permission for this page and press Start again.', true);
+        setStatus('Microphone access was blocked. Allow microphone permission and try again.', true);
         shouldRestart = false;
         stopListening();
         return;
@@ -708,7 +658,7 @@
 
   function startListening(){
     if (!SpeechRecognition){
-      setStatus('Speech recognition is not supported in this browser. Please use Chrome or Edge on desktop.', true);
+      setStatus('Speech recognition is not supported in this browser.', true);
       return;
     }
     recognition = createRecognition();
@@ -727,9 +677,7 @@
   function stopListening(){
     if (silenceTimeout) clearTimeout(silenceTimeout);
     shouldRestart = false;
-    if (recognition){
-      try{ recognition.stop(); } catch(e){}
-    }
+    if (recognition) try{ recognition.stop(); } catch(e){}
     listening = false;
     micBtn.classList.remove('listening');
     micLabel.textContent = 'Start Listening';
@@ -744,7 +692,7 @@
   langSelect.addEventListener('change', function(){
     if (listening){
       shouldRestart = true;
-      if (recognition){ try{ recognition.stop(); } catch(e){} }
+      if (recognition) try{ recognition.stop(); } catch(e){}
       setTimeout(startListening, 250);
     }
   });
@@ -769,11 +717,11 @@
   });
 
   if (!SpeechRecognition){
-    setStatus('Speech recognition is not supported in this browser. Please open this file in Chrome or Edge on desktop.', true);
+    setStatus('Speech recognition not supported.', true);
     micBtn.disabled = true;
   }
 
-  // ================= Conversation mode =================
+  // Conversation mode
   var oneWayTabBtn = document.getElementById('oneWayTabBtn');
   var conversationTabBtn = document.getElementById('conversationTabBtn');
   var howToTabBtn = document.getElementById('howToTabBtn');
@@ -898,15 +846,9 @@
     var fromCode = getTranslateCode(fromSel);
     var toCode = getTranslateCode(toSel);
 
-    addFinalSegment(ownBox, finalText, {
-      withPlay: true,
-      onPlay: function(t){ speakInLang(t, fromBcp47); }
-    });
+    addFinalSegment(ownBox, finalText, { withPlay: true, onPlay: function(t){ speakInLang(t, fromBcp47); } });
 
-    var placeholder = addFinalSegment(otherBox, "Translating…", {
-      withPlay: true, pending: true,
-      onPlay: function(t){ speakInLang(t, toBcp47); }
-    });
+    var placeholder = addFinalSegment(otherBox, "Translating…", { withPlay: true, pending: true, onPlay: function(t){ speakInLang(t, toBcp47); } });
 
     translateText(finalText, fromCode, toCode).then(function(translated){
       placeholder.textContent = translated;
@@ -923,19 +865,13 @@
     rec.interimResults = true;
     rec.lang = langSel.value;
 
-    rec.onstart = function(){
-      console.log('Conv rec onstart fired');
-    };
-
     rec.onresult = function(event){
-      console.log('Conv rec onresult fired, results:', event.results.length);
       if (convSilenceTimeout) clearTimeout(convSilenceTimeout);
 
       var interimText = "";
       for (var i = event.resultIndex; i < event.results.length; i++){
         var result = event.results[i];
         var piece = result[0].transcript;
-        console.log('Result', i, '- Final:', result.isFinal, 'Text:', piece);
         if (result.isFinal){
           convInterim.textContent = '';
           var finalText = piece.trim();
@@ -950,28 +886,24 @@
       }
 
       convSilenceTimeout = setTimeout(function(){
-        if (convRecognition === rec){
-          try { rec.stop(); } catch(e){}
-        }
+        if (convRecognition === rec) try { rec.stop(); } catch(e){}
       }, 2000);
     };
 
     rec.onerror = function(event){
-      console.log('Conv rec onerror fired:', event.error);
       if (event.error === 'aborted') return;
       if (event.error === 'no-speech'){
-        setConvStatus('No speech detected. Try speaking louder or closer to the mic.', true);
+        setConvStatus('No speech detected.', true);
         return;
       }
       if (event.error === 'not-allowed' || event.error === 'service-not-allowed'){
-        setConvStatus('Microphone access was blocked. Allow microphone permission and try again.', true);
+        setConvStatus('Microphone access was blocked.', true);
         return;
       }
-      setConvStatus('Recognition error: ' + event.error, true);
+      setConvStatus('Error: ' + event.error, true);
     };
 
     rec.onend = function(){
-      console.log('Conv rec onend fired');
       if (convSilenceTimeout) clearTimeout(convSilenceTimeout);
       if (convRecognition !== rec) return;
       convRecognition = null;
@@ -986,7 +918,7 @@
 
   function stopConvListening(){
     if (convSilenceTimeout) clearTimeout(convSilenceTimeout);
-    if (convRecognition){ try{ convRecognition.stop(); } catch(e){} }
+    if (convRecognition) try{ convRecognition.stop(); } catch(e){}
     convRecognition = null;
     convActiveSpeaker = null;
     convInterim.textContent = '';
@@ -996,10 +928,10 @@
 
   function startConvListening(speaker){
     if (!SpeechRecognition){
-      setConvStatus('Speech recognition is not supported in this browser. Please use Chrome or Edge on desktop.', true);
+      setConvStatus('Speech recognition not supported.', true);
       return;
     }
-    if (convRecognition){ try{ convRecognition.stop(); } catch(e){} }
+    if (convRecognition) try{ convRecognition.stop(); } catch(e){}
 
     convActiveSpeaker = speaker;
     var targetLang = speaker === 'A' ? personBLang.value : personALang.value;
@@ -1007,16 +939,12 @@
 
     convRecognition = createConvRecognition(speaker);
     try{
-      convRecognition.onstart = function(){
-        console.log('Conv recognition started');
-        updateTurnUI();
-        var label = speaker === 'A' ? turnALabel.textContent : turnBLabel.textContent;
-        setConvStatus('Listening for ' + label + '… speak now, it stops automatically when you pause.');
-      };
       convRecognition.start();
+      updateTurnUI();
+      var label = speaker === 'A' ? turnALabel.textContent : turnBLabel.textContent;
+      setConvStatus('Listening for ' + label + '…');
     } catch(e){
-      setConvStatus('Could not start recognition: ' + e.message, true);
-      console.error('Error starting conv recognition:', e);
+      setConvStatus('Error: ' + e.message, true);
     }
   }
 
@@ -1041,8 +969,8 @@
   });
 
   convClearBtn.addEventListener('click', function(){
-    panelABox.innerHTML = '<div class="empty-hint">This side shows the conversation in Person A\'s language…</div>';
-    panelBBox.innerHTML = '<div class="empty-hint">This side shows the conversation in Person B\'s language…</div>';
+    panelABox.innerHTML = '<div class="empty-hint">Person A\'s language…</div>';
+    panelBBox.innerHTML = '<div class="empty-hint">Person B\'s language…</div>';
     if (synth) synth.cancel();
   });
 
@@ -1050,11 +978,8 @@
     turnABtn.disabled = true;
     turnBBtn.disabled = true;
   }
-  if (!synth){
-    convSpeakToggle.disabled = true;
-  }
+  if (!synth) convSpeakToggle.disabled = true;
 
-  // ---- Tab switching ----
   function showOneWay(){
     onewayPanel.classList.remove('hidden');
     conversationPanel.classList.add('hidden');
@@ -1091,13 +1016,8 @@
   howToTabBtn.addEventListener('click', showHowTo);
 })();
 
-// Register Service Worker for PWA support
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js').then(reg => {
-    console.log('Service Worker registered', reg);
-  }).catch(err => {
-    console.log('Service Worker registration failed:', err);
-  });
+  navigator.serviceWorker.register('/service-worker.js').catch(err => {});
 }
 </script>
 </body>
